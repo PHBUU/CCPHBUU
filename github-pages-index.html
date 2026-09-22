@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1a6640">
+<title>CCPH-BUU | ศูนย์การศึกษาต่อเนื่องสภาวิชาชีพการสาธารณสุขชุมชน</title>
+<meta name="description" content="ลงทะเบียนอบรมและเก็บคะแนน CPD กับศูนย์การศึกษาต่อเนื่องสภาวิชาชีพการสาธารณสุขชุมชน คณะสาธารณสุขศาสตร์ มหาวิทยาลัยบูรพา">
+
+<!-- ตัวอย่างลิงก์ตอนแชร์ใน LINE / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="CCPH-BUU | ลงทะเบียนอบรมการศึกษาต่อเนื่อง">
+<meta property="og:description" content="สมัครสมาชิกครั้งเดียว สมัครอบรมได้ทุกหลักสูตร ตรวจสอบสถานะและแจ้งชำระเงินออนไลน์">
+<!-- ถ้ามีรูปปก ให้อัปโหลดไฟล์ cover.jpg (1200x630) ขึ้น repo แล้วเปิดบรรทัดล่าง -->
+<!-- <meta property="og:image" content="https://USERNAME.github.io/REPO/cover.jpg"> -->
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232E8B57'/%3E%3Ctext x='32' y='41' font-size='24' font-family='Arial' font-weight='700' text-anchor='middle' fill='white'%3ECC%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;800&display=swap" rel="stylesheet">
+
+<script>
+/* ============================================================
+   ⚙️ ตั้งค่า — แก้เฉพาะส่วนนี้
+   เมื่อ deploy Apps Script แล้วได้ URL ใหม่ ให้แก้ GAS_URL บรรทัดเดียว
+   (ลิงก์ที่ส่งให้คนอื่นยังเป็นลิงก์ GitHub เดิมเสมอ)
+   ============================================================ */
+var CONFIG = {
+  GAS_URL: 'https://script.google.com/macros/s/วาง_DEPLOYMENT_ID_ตรงนี้/exec',
+
+  // เปิดเป็น true เมื่อต้องการปิดระบบชั่วคราว (ไม่ต้องแตะ Apps Script)
+  MAINTENANCE: false,
+  MAINTENANCE_TITLE: 'ปิดปรับปรุงระบบชั่วคราว',
+  MAINTENANCE_MSG: 'ระบบจะกลับมาให้บริการเร็วๆ นี้ หากต้องการติดต่อด่วน กรุณาติดต่อเจ้าหน้าที่',
+
+  CONTACT_PHONE: '038-102730',
+  CONTACT_LINE: 'https://bit.ly/CCPHBUU',
+
+  // ถ้าโหลดเกินกี่วินาที ให้แสดงปุ่ม "เปิดระบบโดยตรง"
+  SLOW_SECONDS: 15
+};
+</script>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Sarabun',system-ui,-apple-system,'Segoe UI',Tahoma,sans-serif;background:#1a6640;color:#fff;overflow:hidden}
+[hidden]{display:none!important}
+
+#app{position:fixed;inset:0;width:100%;height:100%;border:0;background:#f0f4f8;opacity:0;transition:opacity .35s ease}
+#app.ready{opacity:1}
+
+.screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:2rem 1.5rem;text-align:center;background:linear-gradient(160deg,#1a6640 0%,#2E8B57 60%,#3aab6a 100%);z-index:2;transition:opacity .35s ease}
+.screen.gone{opacity:0;pointer-events:none}
+.logo{width:72px;height:72px;border-radius:20px;background:#fff;color:#2E8B57;font-weight:800;font-size:26px;
+  display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(0,0,0,.2);margin-bottom:1.1rem}
+.t1{font-size:24px;font-weight:800;letter-spacing:.5px}
+.t2{font-size:14px;opacity:.85;margin-top:.25rem;max-width:34ch;line-height:1.5}
+.bar{width:160px;height:4px;border-radius:4px;background:rgba(255,255,255,.2);overflow:hidden;margin:1.6rem 0 .8rem}
+.bar i{display:block;width:40%;height:100%;background:#fff;border-radius:4px;animation:slide 1.2s ease-in-out infinite}
+@keyframes slide{0%{transform:translateX(-100%)}100%{transform:translateX(250%)}}
+.t3{font-size:13px;opacity:.75}
+.slow{margin-top:1.5rem;font-size:13px;opacity:.95;display:flex;flex-direction:column;align-items:center;gap:.6rem}
+.btn{display:inline-flex;align-items:center;gap:6px;background:#fff;color:#1a6640;text-decoration:none;font-weight:700;
+  font-size:14px;padding:10px 20px;border-radius:50px;box-shadow:0 4px 14px rgba(0,0,0,.15)}
+.btn:focus-visible{outline:3px solid #fde68a;outline-offset:2px}
+.btn.ghost{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.6);box-shadow:none}
+.maint-card{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);border-radius:18px;padding:1.5rem;max-width:420px;margin-top:1.4rem}
+.maint-card h2{font-size:18px;margin-bottom:.5rem}
+.maint-card p{font-size:14px;line-height:1.6;opacity:.9}
+.maint-card .row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:1rem}
+@media (prefers-reduced-motion:reduce){.bar i{animation:none;width:100%}#app,.screen{transition:none}}
+</style>
+</head>
+<body>
+
+<div id="splash" class="screen" role="status" aria-live="polite">
+  <div class="logo">CC</div>
+  <div class="t1">CCPH-BUU</div>
+  <div class="t2">ศูนย์การศึกษาต่อเนื่องสภาวิชาชีพการสาธารณสุขชุมชน คณะสาธารณสุขศาสตร์ มหาวิทยาลัยบูรพา</div>
+  <div class="bar"><i></i></div>
+  <div class="t3">กำลังเปิดระบบ...</div>
+  <div id="slow" class="slow" hidden>
+    <span>ระบบใช้เวลาโหลดนานกว่าปกติ</span>
+    <a id="direct" class="btn" target="_top" rel="noopener">เปิดระบบโดยตรง</a>
+  </div>
+</div>
+
+<div id="maint" class="screen" hidden>
+  <div class="logo">CC</div>
+  <div class="t1">CCPH-BUU</div>
+  <div class="maint-card">
+    <h2 id="m-title"></h2>
+    <p id="m-msg"></p>
+    <div class="row">
+      <a id="m-phone" class="btn"></a>
+      <a id="m-line" class="btn ghost" target="_blank" rel="noopener">LINE</a>
+    </div>
+  </div>
+</div>
+
+<iframe id="app" title="CCPH-BUU ระบบลงทะเบียนอบรม" allow="clipboard-write; clipboard-read"></iframe>
+
+<noscript>
+  <div class="screen"><div class="t1">กรุณาเปิดใช้งาน JavaScript</div></div>
+</noscript>
+
+<script>
+(function () {
+  // ส่งต่อ query string ไปให้ระบบด้วย เช่น ?course=CCPH-C2 หรือ ?page=member
+  var target = CONFIG.GAS_URL + (location.search || '');
+  var splash = document.getElementById('splash');
+  document.getElementById('direct').href = target;
+
+  if (CONFIG.MAINTENANCE) {
+    splash.hidden = true;
+    document.getElementById('maint').hidden = false;
+    document.getElementById('m-title').textContent = CONFIG.MAINTENANCE_TITLE;
+    document.getElementById('m-msg').textContent = CONFIG.MAINTENANCE_MSG;
+    var ph = document.getElementById('m-phone');
+    ph.textContent = '☎ ' + CONFIG.CONTACT_PHONE;
+    ph.href = 'tel:' + CONFIG.CONTACT_PHONE.replace(/[^0-9+]/g, '');
+    document.getElementById('m-line').href = CONFIG.CONTACT_LINE;
+    return;
+  }
+
+  var app = document.getElementById('app');
+  var loaded = false;
+  app.addEventListener('load', function () {
+    if (!app.getAttribute('src')) return;
+    loaded = true;
+    app.classList.add('ready');
+    splash.classList.add('gone');
+    setTimeout(function () { splash.hidden = true; }, 400);
+  });
+  setTimeout(function () {
+    if (!loaded) document.getElementById('slow').hidden = false;
+  }, CONFIG.SLOW_SECONDS * 1000);
+
+  app.src = target;
+})();
+</script>
+</body>
+</html>
